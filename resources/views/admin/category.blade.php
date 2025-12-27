@@ -1,146 +1,168 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
-   
-  <head> 
+<head>
     @include('admin.css')
 
-    <style type="text/css">
-      input[type='text']
-      {
-        width: 400px; 
-        height: 40px;
-      }
+    <style>
+        .category-wrapper{
+            margin: 40px auto;
+            max-width: 800px;
+        }
 
-      .div_deg{
+        .category-card{
+            background:#2a2f34;
+            padding:25px;
+            border-radius:10px;
+            box-shadow:0 5px 20px rgba(0,0,0,0.4);
+        }
 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 30px ;
-      }
+        .category-card h2{
+            color:#fff;
+            text-align:center;
+            margin-bottom:20px;
+        }
 
-      .table_deg{
+        .category-form{
+            display:flex;
+            gap:10px;
+            justify-content:center;
+            margin-bottom:30px;
+        }
 
-        text-align: center ;
-        margin: auto;
-        border: 2px solid yellowgreen; 
-        margin-top: 50px ;
-        width: 600px ;
-      }
+        .category-form input[type="text"]{
+            width:350px;
+            height:42px;
+        }
 
-      th{
+        table{
+            width:100%;
+            text-align:center;
+        }
 
-        background-color: skyblue ;
-        padding: 15px ;
-        font-size: 20px ;
-        font-weight: bold ;
-        color: white;  
-      }
+        th{
+            background:#0dcaf0;
+            color:#fff;
+            padding:12px;
+            font-size:18px;
+        }
 
-      td{
+        td{
+            padding:10px;
+            color:#fff;
+            border:1px solid #0dcaf0;
+        }
 
-        color: white  ;
-        padding : 10px ;
-        border: 1px solid skyblue ;
-      }
-
-
-
+        .action-btns{
+            display:flex;
+            justify-content:center;
+            gap:8px;
+        }
     </style>
-  </head>
-  <body>
-    <header class="header">   
+</head>
+
+<body>
+
+<header class="header">
     @include('admin.header')
-    </header>
-     <!-- Sidebar Navigation-->
-        @include('admin.slide')
-    <!-- Sidebar Navigation end-->
-      <div class="page-content">
-        <div class="page-header">
-          <div class="container-fluid">
-             <div> 
-           <form action="{{url('add_category')}}" method="POST">
-           @csrf
-           <h1 style="color:white;">Add Category</h1>
-           <div class="div_deg">
+</header>
 
+@include('admin.slide')
 
-           <input type="text" name="category">
-          
-           <input type="submit" value="Add Category" class="btn btn-primary">
-           </div>
-           </form>
-          </div>
+<div class="page-content">
+    <div class="container-fluid">
 
-          <div>
-           <!-- Category Table -->
-<table class="table_deg table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Category Name</th>
-            <th>Action</th>
-        </tr>
-    </thead>
+        <div class="category-wrapper">
+            <div class="category-card">
 
-    <tbody>
-        @foreach ($data as $category)
-        <tr>
-            <td>{{ $category->category_name }}</td>
-            <td style="display:flex; gap:8px; align-items:center;">
+                <!-- Add Category -->
+                <h2>Add Category</h2>
 
-                <!-- Edit Button -->
-                <button 
-                    class="btn btn-success btn-sm"
-                    onclick="openEditModal('{{ $category->id }}', '{{ $category->category_name }}')">
-                    Edit
-                </button>
-
-                <!-- Delete Form -->
-                <form action="{{ url('delete_category/'.$category->id) }}" method="POST">
+                <form action="{{ url('add_category') }}" method="POST">
                     @csrf
-                    @method('DELETE')
-                    <button type="submit" 
-                        class="btn btn-danger btn-sm"
-                        onclick="return confirm('Are you sure you want to delete this category?')">
-                        Delete
-                    </button>
+                    <div class="category-form">
+                        <input type="text" name="category" placeholder="Enter category name">
+                        <button type="submit" class="btn btn-primary">
+                            Add
+                        </button>
+                    </div>
                 </form>
 
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
-<!-- Edit Category Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
+                <!-- Category Table -->
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Category Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
 
-      <form method="POST" id="editForm">
-        @csrf
-        @method('PUT')
+                    <tbody>
+                        @foreach ($data as $category)
+                        <tr>
+                            <td>{{ $category->category_name }}</td>
+                            <td>
+                                <div class="action-btns">
 
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Category</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    <button class="btn btn-success btn-sm"
+                                        onclick="openEditModal('{{ $category->id }}','{{ $category->category_name }}')">
+                                        Edit
+                                    </button>
+
+                                    <form action="{{ url('delete_category/'.$category->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete this category?')">
+                                            Delete
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+            </div>
         </div>
-
-        <div class="modal-body">
-            <input type="text" name="category_name" id="categoryNameInput" class="form-control">
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            Cancel
-          </button>
-          <button type="submit" class="btn btn-primary">Update</button>
-        </div>
-
-      </form>
 
     </div>
-  </div>
 </div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form method="POST" id="editForm">
+                @csrf
+                @method('PUT')
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="text" name="category_name" id="categoryNameInput" class="form-control">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Update
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
 
    <!-- JavaScript files-->
 
