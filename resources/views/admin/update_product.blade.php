@@ -1,106 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     @include('admin.css')
+
     <style>
-    .product_div{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 60px;
-        flex-direction: column;
-    }
+        .product-wrapper{
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+        }
 
-    .product_div div{
-        margin-bottom: 15px;
-    }
+        .product-card{
+            width: 600px;
+            background: #1f1f1f;
+            padding: 30px;
+            border-radius: 8px;
+        }
 
-    label{
-        display:block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
+        .form-group{
+            margin-bottom: 18px;
+        }
 
-    input, textarea, select{
-        width: 500px;
-        padding: 8px;
-    }
+        .form-group label{
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
 
-    .submit_div{
+        .form-group input,
+        .form-group textarea,
+        .form-group select{
+            width: 100%;
+            padding: 8px;
+        }
 
-        width: 200px ;
-    }
+        .current-img img{
+            margin-top: 10px;
+            border-radius: 4px;
+        }
     </style>
 </head>
+
 <body>
-    <header class="header">
-        @include('admin.header')
-    </header>
+<header class="header">
+    @include('admin.header')
+</header>
 
-    <!-- Sidebar Navigation-->
-    @include('admin.slide')
-    <!-- Sidebar Navigation end-->
+@include('admin.slide')
 
-    <div class="page-content">
-        <div class="page-header">
-            <div class="container-fluid">
-         <div class="product_div">
-<form action="{{ url('update_product/'.$product->id) }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    @method('PUT')
+<div class="page-content">
+    <div class="container-fluid">
 
-    <div class="input_div">
-        <label>Edit the Product Title</label>
-        <input type="text" name="title" value="{{ $product->title }}" required>
-    </div>
+        <div class="product-wrapper">
+            <div class="product-card">
 
-    <div class="input_div">
-        <label>Edit the Product Description</label>
-        <textarea name="description" required> {{ $product->description }}</textarea>
-    </div>
+                <form action="{{ url('update_product/'.$product->id) }}" 
+                      method="POST" 
+                      enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
 
-    <div class="input_div">
-        <label>Edit the Product Price</label>
-        <input type="text" name="price" value="{{ $product->price }}" required>
-    </div>
+                    <div class="form-group">
+                        <label>Product Title</label>
+                        <input type="text" name="title" value="{{ $product->title }}" required>
+                    </div>
 
-  <div class="input_div">
-    <label>Edit the Product Category</label>
-    <select name="category" required>
-     
-        @foreach($categories as $cat)
-            <option value="{{ $cat->category_name }}" 
-                @if($product->category == $cat->category_name) selected @endif>
-                {{ $cat->category_name }}
-            </option>
-        @endforeach
-    </select>
-</div>
+                    <div class="form-group">
+                        <label>Product Description</label>
+                        <textarea name="description" required>{{ $product->description }}</textarea>
+                    </div>
 
-    <div class="input_div">
-        <label>Edit the Product Quantity</label>
-        <input type="number" name="quantity" value="{{ $product->quantity }}" required>
-    </div>
-    <div class="input_div">
+                    <div class="form-group">
+                        <label>Product Price</label>
+                        <input type="text" name="price" value="{{ $product->price }}" required>
+                    </div>
 
-    <label for="">Current Image</label>
-    <img width="150" src="/products/{{$product->image}}" alt="">
-    </div>
-    <div class="input_div">
-        <label>New Image</label>
-        <input type="file" name="image">
-    </div>
+                    <div class="form-group">
+                        <label>Product Category</label>
+                        <select name="category" required>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat->category_name }}"
+                                    {{ $product->category == $cat->category_name ? 'selected' : '' }}>
+                                    {{ $cat->category_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-    <button type="submit" class="btn btn-success">Update Product</button>
-</form>
+                    <div class="form-group">
+                        <label>Product Quantity</label>
+                        <input type="number" name="quantity" value="{{ $product->quantity }}" required>
+                    </div>
 
+                    <div class="form-group current-img">
+                        <label>Current Image</label>
+                        <img width="150" src="/products/{{ $product->image }}" alt="">
+                    </div>
 
+                    <div class="form-group">
+                        <label>Change Image</label>
+                        <input type="file" name="image">
+                    </div>
 
-         
-          </div>
+                    <button type="submit" class="btn btn-success w-100">
+                        Update Product
+                    </button>
+
+                </form>
+
             </div>
         </div>
+
     </div>
+</div>
+</body>
+</html>
+
 
     <!-- JavaScript files -->
     <script src="{{ asset('admin_css/vendor/jquery/jquery.min.js') }}"></script>
