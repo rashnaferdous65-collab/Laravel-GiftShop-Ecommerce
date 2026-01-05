@@ -1,151 +1,152 @@
-<!DOCTYPE html> 
-<html>
-  <head> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
     @include('admin.css')
 
     <style>
-
-        .div_deg{
-
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .content-wrapper{
             margin-top: 60px;
-
         }
 
+        .search-box{
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            margin-left: 50px;
+        }
 
-        .table_deg{
+        input[type="search"]{
+            width: 500px;
+            height: 40px;
+        }
 
+        .table-wrapper{
+            display: flex;
+            justify-content: center;
+        }
 
-            border:2px solid  yellowgreen ;
+        table{
+            border: 2px solid yellowgreen;
+            width: 95%;
         }
 
         th{
-
-
-            background-color: skyblue ;
-            color: white ;
-            font-size: 19px ;
-            font-weight: bold ;
-            padding: 15px ;
-        
+            background: skyblue;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
         }
 
         td{
-
-        border:2px solid  yellowgreen ;
-        text-align: center ;
-        color: white;  
-
+            border: 2px solid yellowgreen;
+            text-align: center;
+            color: white;
+            padding: 10px;
+            vertical-align: middle;
         }
 
-        .pagi_deg{
-
-           display: flex;
+        .action-btns{
+            display: flex;
             justify-content: center;
-            align-items: center;
-            margin-top: 60px; 
-        }
-        .action-cell {
-    border-top: none;     
-    border-bottom: none;
-    margin-top: 30px ;
-
+            gap: 10px;
         }
 
-        input[type='search']{
-            width: 500px ;
-            height: 40px ;
-            margin-left: 50px ;
+        .pagination-box{
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
         }
 
-
+        img{
+            border-radius: 6px;
+        }
     </style>
-  </head>
-  <body>
-    <header class="header">   
+</head>
+
+<body>
+<header class="header">
     @include('admin.header')
-    </header>
-     <!-- Sidebar Navigation-->
-        @include('admin.slide')
-    <!-- Sidebar Navigation end-->
-      <div class="page-content">
-        <div class="page-header">
-          <div class="container-fluid">
-               
-          <form action="{{url('product_search')}}" method="GET">
-         @csrf
-          <input type="search" name="search">
-          <input type="submit" value="search" class="btn btn-primary py-2 px-4">
-          </form>
-         <div class="div_deg">
-         <table class="table_deg">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Category</th>
-            <th>Quantity</th>
-            <th>Image</th>
-            <th>Action</th>
-         
-        </tr>
-     
-    </thead>
+</header>
 
-    <tbody>
-        @foreach($product as $products)
-        <tr>
-            <td>{{ $products->title }}</td>
+@include('admin.slide')
 
-            <td>{!! Str::limit($products->description, 50) !!}</td>
+<div class="page-content">
+    <div class="page-header">
+        <div class="container-fluid content-wrapper">
 
-            <td>{{ $products->price }}</td>
+            <!-- 🔍 Search -->
+            <form action="{{ url('product_search') }}" method="GET" class="search-box">
+                @csrf
+                <input type="search" name="search" placeholder="Search product...">
+                <button class="btn btn-primary px-4">Search</button>
+            </form>
 
-            <td>{{ $products->category }}</td>
+            <!-- 📦 Product Table -->
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Image</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
 
-            <td>{{ $products->quantity }}</td>
-            <td>
-    <img src="/products/{{ $products->image }}" width="80" height="80">
-</td>
+                    <tbody>
+                        @foreach($product as $products)
+                        <tr>
+                            <td>{{ $products->title }}</td>
 
- 
->
+                            <td>{!! Str::limit($products->description, 50) !!}</td>
 
-            <td style="vertical-align: middle; display:flex; gap:10px;" class="action-cell" >
+                            <td>{{ $products->price }}</td>
 
-                <!-- Edit Button -->
-               <a href="{{ url('edit_product/'.$products->id) }}" class="btn btn-success btn-sm"> Edit</a>
+                            <td>{{ $products->category }}</td>
 
-                <!-- Delete Button -->
-                <form action="{{ url('delete_product/'.$products->id) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" 
-                        class="btn btn-danger btn-sm"
-                        onclick="return confirm('Are you sure you want to delete this Product?')">
-                        Delete
-                    </button>
-                </form>
+                            <td>{{ $products->quantity }}</td>
 
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+                            <td>
+                                <img src="/products/{{ $products->image }}" width="80" height="80">
+                            </td>
 
+                            <td>
+                                <div class="action-btns">
+                                    <a href="{{ url('edit_product/'.$products->id) }}" class="btn btn-success btn-sm">
+                                        Edit
+                                    </a>
 
-        
-         </div>
+                                    <form action="{{ url('delete_product/'.$products->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete this Product?')">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
 
-         <div class="pagi_deg">  {{$product->links()}} </div>
-         
-          </div>
-      </div>
+            <!-- 📄 Pagination -->
+            <div class="pagination-box">
+                {{ $product->links() }}
+            </div>
+
+        </div>
     </div>
+</div>
+
+</body>
+</html>
+
    <!-- JavaScript files-->
 <script src="{{ asset('admin_css/vendor/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('admin_css/vendor/popper.js/umd/popper.min.js') }}"></script>
