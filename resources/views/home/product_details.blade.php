@@ -1,51 +1,71 @@
-@extends('layouts.app') 
+@extends('layouts.app')
 
-@section('title', 'Giftshop - That is what makes you surprised.') 
+@section('title', 'Giftshop - That is what makes you surprised.')
 
-@section('content') 
-    
+@section('content')
+
+{{-- Header --}}
 <div class="hero_area">
-    @include('home.header') 
+    @include('home.header')
 </div>
 
-<!-- start product details -->
-<div class="container mt-5">
+{{-- Product Details --}}
+<div class="container my-5">
 
-    @if($product)
-        <h2 style="font-weight:bold; font-size: 25px;">{{ $product->title }}</h2>
+    @isset($product)
+        <div class="row align-items-start">
 
-        <div class="row">
-            <div class="col-md-6">
-                <img src="{{ asset('products/' . $product->image) }}" width="500"
-                     class="img-fluid" 
-                     alt="{{ $product->title }}">
+            {{-- Product Image --}}
+            <div class="col-lg-6 mb-4">
+                <div class="border p-3 text-center">
+                    <img
+                        src="{{ asset('products/'.$product->image) }}"
+                        alt="{{ $product->title }}"
+                        class="img-fluid rounded"
+                        style="max-height:450px;"
+                    >
+                </div>
             </div>
 
-            <div class="col-md-6">
-                <h4 style="font-size: 25px; font-weight:bold; padding-bottom:15px;">
-                    Category: {{ $product->category }}
-                </h4>
-                <h3 style="font-size: 30px; font-weight: 700; padding-bottom:15px;">
+            {{-- Product Info --}}
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-3">{{ $product->title }}</h2>
+
+                <p class="mb-2">
+                    <strong>Category:</strong> {{ $product->category }}
+                </p>
+
+                <p class="fs-4 fw-bold text-dark mb-3">
                     Price: ৳ {{ $product->price }}
-                </h3>
+                </p>
 
-                <p>{{ $product->description }}</p>
-                <h2 style="font-size: 20px; color:red; padding-top:15px; padding-bottom:15px;">
+                <p class="text-muted mb-3">
+                    {{ $product->description }}
+                </p>
+
+                <p class="fw-semibold text-danger mb-4">
                     Available Quantity: {{ $product->quantity }}
-                </h2>
+                </p>
 
-                <a href="{{ url('add_cart', $product->id) }}" class="btn btn-primary" style="margin-bottom:50px;">
+                <a
+                    href="{{ url('add_cart', $product->id) }}"
+                    class="btn btn-primary px-4"
+                >
                     Add to Cart
                 </a>
             </div>
+
         </div>
     @else
-        <h3 class="text-center text-danger mt-5">Product not found.</h3>
-    @endif
+        <div class="text-center py-5">
+            <h3 class="text-danger">Product not found.</h3>
+        </div>
+    @endisset
+
 </div>
-<!-- end product details -->
 
-
+{{-- Info Section --}}
 @include('home.info')
 
 @endsection
+
